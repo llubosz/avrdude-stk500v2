@@ -246,11 +246,9 @@ static int usbdev_open(char * port, union pinfo pinfo, union filedescriptor *fd)
 		    }
 
 		  fd->usb.handle = udev;
-		  if (fd->usb.rep == 0)
-		    {
-		      /* Try finding out what our read endpoint is. */
-		      for (i = 0; i < dev->config[0].interface[iface].altsetting[0].bNumEndpoints; i++)
-			{
+		  /* Try finding out what our read endpoint is. */
+		  for (i = 0; i < dev->config[0].interface[iface].altsetting[0].bNumEndpoints; i++)
+	        	{
 			  int possible_ep = dev->config[0].interface[iface].altsetting[0].
 			  endpoint[i].bEndpointAddress;
 
@@ -262,13 +260,12 @@ static int usbdev_open(char * port, union pinfo pinfo, union filedescriptor *fd)
 			      break;
 			    }
 			}
-		      if (fd->usb.rep == 0)
+		  if (fd->usb.rep == 0)
 			{
 			  avrdude_message(MSG_INFO, "%s: usbdev_open(): cannot find a read endpoint, using 0x%02x\n",
                                           progname, USBDEV_BULK_EP_READ_MKII);
 			  fd->usb.rep = USBDEV_BULK_EP_READ_MKII;
 			}
-		    }
 		  for (i = 0; i < dev->config[0].interface[iface].altsetting[0].bNumEndpoints; i++)
 		    {
 		      if ((dev->config[0].interface[iface].altsetting[0].endpoint[i].bEndpointAddress == fd->usb.rep ||
